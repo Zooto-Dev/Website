@@ -843,12 +843,80 @@
     document.querySelectorAll('.apply-btn').forEach(b => b.addEventListener('click', () => showApply(b.getAttribute('data-role'))));
   }
   document.getElementById('generalApply').addEventListener('click', () => showApply('General application'));
+
+  // ---- Google for Jobs: inject JobPosting structured data for each open role ----
+  function isoPlusDays(days){
+    const d = new Date(); d.setDate(d.getDate() + days);
+    return d.toISOString().slice(0, 10);
+  }
+  function empType(t){
+    const s = String(t || '').toLowerCase();
+    if (s.indexOf('part') === 0 || s.indexOf('part-time') >= 0) return 'PART_TIME';
+    if (s.indexOf('contract') >= 0) return 'CONTRACTOR';
+    if (s.indexOf('intern') >= 0) return 'INTERN';
+    if (s.indexOf('temp') >= 0) return 'TEMPORARY';
+    return 'FULL_TIME';
+  }
+  function injectJobLd(roles){
+    document.querySelectorAll('script.jobposting-ld').forEach(n => n.remove());
+    const SITE = 'https://zootofashion.com';
+    roles.forEach(r => {
+      const title = r.title || r.position || r.role; if (!title) return;
+      const loc = r.location || 'IMT Manesar';
+      const type = r.type || 'Full-time';
+      const exp = r.experience || r.exp || '';
+      const dept = r.department || r.dept || '';
+      let desc = r.description || r.desc || '';
+      desc = (desc ? desc + ' ' : '') + title + ' at Zooto Fashion Pvt Ltd, ' + loc + '.'
+           + (dept ? ' Department: ' + dept + '.' : '')
+           + ' Employment type: ' + type + '.'
+           + (exp ? ' Experience: ' + exp + '.' : '');
+      const data = {
+        "@context": "https://schema.org/",
+        "@type": "JobPosting",
+        "title": String(title),
+        "description": String(desc),
+        "datePosted": (r.posted && /^\d{4}-\d{2}-\d{2}/.test(r.posted)) ? r.posted : isoPlusDays(0),
+        "validThrough": isoPlusDays(30),
+        "employmentType": empType(type),
+        "hiringOrganization": {
+          "@type": "Organization",
+          "name": "Zooto Fashion Pvt Ltd",
+          "sameAs": SITE,
+          "logo": SITE + "/logo.png"
+        },
+        "jobLocation": {
+          "@type": "Place",
+          "address": {
+            "@type": "PostalAddress",
+            "streetAddress": "Plot 300, Sector 6, IMT Manesar",
+            "addressLocality": "Gurugram",
+            "addressRegion": "HR",
+            "postalCode": "122052",
+            "addressCountry": "IN"
+          }
+        },
+        "identifier": {
+          "@type": "PropertyValue",
+          "name": "Zooto Fashion Pvt Ltd",
+          "value": String(title)
+        }
+      };
+      const s = document.createElement('script');
+      s.type = 'application/ld+json';
+      s.className = 'jobposting-ld';
+      s.text = JSON.stringify(data);
+      document.head.appendChild(s);
+    });
+  }
+
   async function loadOpenings(){
     try{
       const res = await fetch(SCRIPT_URL, { method:'GET' });
       const roles = await res.json();
       if(!Array.isArray(roles) || roles.length===0){ noRoles(); return; }
       rolesList.innerHTML = roles.map(roleHTML).join('');
+      injectJobLd(roles);
       // dropdown: keep placeholder + General application, insert roles before it
       const general = [...positionSelect.options].find(o => o.text==='General application');
       roles.forEach(r => {
