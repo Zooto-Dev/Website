@@ -821,7 +821,7 @@
     </div>`;
   }
   function noRoles(){
-    rolesList.innerHTML = `<div class="roles-empty"><div class="t">No open roles right now.</div><div class="s">We're always glad to meet good people — send us your resume below.</div></div>`;
+    rolesList.innerHTML = `<div class="roles-empty"><div class="t">No open roles right now.</div><div class="s">We're always glad to meet good people &mdash; send us your resume below.</div></div>`;
   }
   function bindApply(){
     document.querySelectorAll('.apply-btn').forEach(b => b.addEventListener('click', () => {
@@ -872,7 +872,7 @@
     const file = careerForm.resume_file.files[0];
     const link = careerForm.resume.value.trim();
     if (!file && !link) { setStatus(careerStatus, 'Please attach your resume (PDF/DOC) or paste a link.', false); return; }
-    if (file && file.size > 5 * 1024 * 1024) { setStatus(careerStatus, 'Resume is too large — please keep it under 5 MB.', false); return; }
+    if (file && file.size > 5 * 1024 * 1024) { setStatus(careerStatus, 'Resume is too large - please keep it under 5 MB.', false); return; }
 
     careerBtnText.textContent = 'Submitting...';
     try {
@@ -930,7 +930,7 @@
     if (!ok){
       const d = document.getElementById('adminDenied');
       d.style.display = 'block';
-      d.textContent = 'Access denied — ' + (email || 'this account') + ' is not a @' + ADMIN_DOMAIN + ' account.';
+      d.textContent = 'Access denied - ' + (email || 'this account') + ' is not a @' + ADMIN_DOMAIN + ' account.';
       return;
     }
     document.getElementById('adminDenied').style.display = 'none';
@@ -959,7 +959,7 @@
         return `<div class="adm-job">
           <div class="b">
             <div class="t">${esc(j.title)}${j.department?`<span class="dept">${esc(j.department)}</span>`:''}<span class="adm-pill ${open?'open':'closed'}">${open?'Open':'Closed'}</span></div>
-            <div class="meta">${esc(j.location||'')}${j.type?' · '+esc(j.type):''}${j.experience?' · '+esc(j.experience):''}</div>
+            <div class="meta">${esc(j.location||'')}${j.type?' &middot; '+esc(j.type):''}${j.experience?' &middot; '+esc(j.experience):''}</div>
             ${j.description?`<div class="desc">${esc(j.description)}</div>`:''}
           </div>
           <div class="adm-acts">
@@ -991,7 +991,7 @@
     const title = document.getElementById('aj_title').value.trim();
     const st = document.getElementById('adminStatus');
     if (!title){ setStatus(st, 'Title is required.', false); return; }
-    document.getElementById('aj_postText').textContent = 'Posting…';
+    document.getElementById('aj_postText').textContent = 'Posting...';
     const job = {
       title,
       department: document.getElementById('aj_dept').value.trim(),
