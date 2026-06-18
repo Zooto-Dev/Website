@@ -99,22 +99,23 @@
   @media(max-width:920px){.navlinks,.navcta{display:none}.burger{display:flex}.mobile-menu.open{display:block}}
 
   /* hero */
-  .hero{padding:124px 0 70px}
-  .hero-grid{display:grid;grid-template-columns:1.05fr .95fr;gap:60px;align-items:center}
+  .hero{padding:124px 0 60px}
+  .hero-text{max-width:760px}
   .hero h1{font-size:clamp(40px,5.6vw,72px);line-height:1.05;margin-top:22px}
   .hero h1 em{font-style:italic;color:var(--green)}
-  .hero .lead{color:var(--soft);font-size:18px;line-height:1.65;max-width:30em;margin:26px 0 32px}
+  .hero .lead{color:var(--soft);font-size:18px;line-height:1.65;max-width:34em;margin:26px 0 32px}
   .hero .lead b{color:var(--ink);font-weight:600}
   .hero-btns{display:flex;gap:16px;align-items:center;flex-wrap:wrap;margin-bottom:30px}
   .trust{display:flex;gap:22px;flex-wrap:wrap;color:var(--soft);font-size:14px}
   .trust span{display:inline-flex;align-items:center;gap:7px}
   .trust svg{color:var(--green)}
-  .photo{position:relative;aspect-ratio:1/1.1;border-radius:10px;overflow:hidden;background:linear-gradient(160deg,#e9e4d6,#dcd6c4);box-shadow:0 36px 70px -40px rgba(34,36,24,.45)}
-  .photo img{width:100%;height:100%;object-fit:cover}
-  .ph{position:absolute;inset:0;display:flex;flex-direction:column;gap:12px;align-items:center;justify-content:center;color:#b0a98f}
+  .hero-banner{max-width:1160px;margin:48px auto 0;padding:0 32px}
+  .frame2{position:relative;border-radius:16px;overflow:hidden;background:linear-gradient(160deg,#e9e4d6,#dcd6c4);box-shadow:0 40px 80px -44px rgba(34,36,24,.5)}
+  .frame2 img{width:100%;height:auto;display:block}
+  .ph{min-height:340px;display:flex;flex-direction:column;gap:12px;align-items:center;justify-content:center;color:#b0a98f}
   .ph svg{width:48px;height:48px}
   .ph span{font-size:12px;letter-spacing:.12em;text-transform:uppercase;font-weight:600}
-  .chip{position:absolute;top:18px;left:18px;background:var(--green);color:var(--paper);font-size:11px;letter-spacing:.1em;text-transform:uppercase;font-weight:600;padding:7px 13px;border-radius:100px}
+  .chip{position:absolute;top:18px;left:18px;z-index:2;background:var(--green);color:var(--paper);font-size:11px;letter-spacing:.1em;text-transform:uppercase;font-weight:600;padding:7px 13px;border-radius:100px}
 
   /* credentials strip */
   .creds{border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
@@ -305,7 +306,7 @@
   #toTop:hover{background:var(--green-deep)}
   .mobile-cta{display:none}
   @media(max-width:920px){
-    .hero-grid,.about-grid{grid-template-columns:1fr;gap:40px}
+    .about-grid{grid-template-columns:1fr;gap:40px}
     .creds .row,.grid-4,.grid-3,.adv-grid,.why-strip,.foot-grid{grid-template-columns:1fr 1fr}
     .adv.span2,.adv.span2 .sol ul{grid-column:auto;grid-template-columns:1fr}
     .form-wrap{grid-template-columns:1fr;padding:30px}
@@ -358,21 +359,21 @@
 <main>
   <!-- HERO -->
   <section class="hero">
-    <div class="wrap hero-grid">
-      <div>
-        <div class="eyebrow reveal">Govt. Recognized • Sedex Compliant • Since 2022</div>
-        <h1 class="reveal">The world's <em>best brands trust.</em></h1>
-        <p class="lead reveal">From sneakers to clogs, Zooto Fashion engineers <b>1 lakh pairs every month</b> to European quality standards — with on-time delivery, real-time tracking, and fresh designs rolled out monthly.</p>
-        <div class="hero-btns reveal">
-          <a href="#contact" class="btn">Get a Quote <i data-lucide="arrow-right" style="width:16px;height:16px"></i></a>
-          <a href="#testimonials" class="btn-ghost">See Why Brands Choose Us</a>
-        </div>
-        <div class="trust reveal">
-          <span><i data-lucide="check-circle-2" style="width:16px;height:16px"></i> On-time delivery</span>
-          <span><i data-lucide="check-circle-2" style="width:16px;height:16px"></i> EU quality standards</span>
-        </div>
+    <div class="wrap hero-text">
+      <div class="eyebrow reveal">Govt. Recognized • Sedex Compliant • Since 2022</div>
+      <h1 class="reveal">The world's <em>best brands trust.</em></h1>
+      <p class="lead reveal">From sneakers to clogs, Zooto Fashion engineers <b>1 lakh pairs every month</b> to European quality standards — with on-time delivery, real-time tracking, and fresh designs rolled out monthly.</p>
+      <div class="hero-btns reveal">
+        <a href="#contact" class="btn">Get a Quote <i data-lucide="arrow-right" style="width:16px;height:16px"></i></a>
+        <a href="#testimonials" class="btn-ghost">See Why Brands Choose Us</a>
       </div>
-      <div class="photo reveal">
+      <div class="trust reveal">
+        <span><i data-lucide="check-circle-2" style="width:16px;height:16px"></i> On-time delivery</span>
+        <span><i data-lucide="check-circle-2" style="width:16px;height:16px"></i> EU quality standards</span>
+      </div>
+    </div>
+    <div class="hero-banner reveal">
+      <div class="frame2">
         <div class="chip">IMT Manesar</div>
         <img src="Herophoto.png" alt="Zooto Fashion footwear manufacturing" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
         <div class="ph" style="display:none">
@@ -568,12 +569,16 @@
           <div class="roles-loading">Loading open roles…</div>
         </div>
 
-        <!-- APPLICATION FORM -->
-        <div id="apply" class="form-wrap reveal" style="margin-top:40px">
+        <div style="text-align:center;margin-top:24px">
+          <button type="button" id="generalApply" class="btn-ghost">Don't see a fit? Apply with your resume</button>
+        </div>
+
+        <!-- APPLICATION FORM (hidden until "Apply" is clicked) -->
+        <div id="apply" class="form-wrap" style="margin-top:32px;display:none">
           <div class="intro">
             <div class="eyebrow">Apply now</div>
             <h3>Tell us about you.</h3>
-            <p>Pick a role or apply generally. Share a link to your resume (Google Drive, LinkedIn or a PDF) and we'll get back to you.</p>
+            <p>Share your resume (PDF/DOC) or a link, and we'll get back to you.</p>
             <div class="points">
               <div><i data-lucide="check-circle-2" style="width:18px;height:18px"></i> We read every application</div>
               <div><i data-lucide="check-circle-2" style="width:18px;height:18px"></i> Reply within a few working days</div>
@@ -683,7 +688,7 @@
     <div class="h">Staff area</div>
     <div id="gsiArea">
       <div id="gsiBtn"></div>
-      <div id="gsiHint">Sign in with your <b>@zootofashion.com</b> account to manage job postings.</div>
+      <div id="gsiHint"></div>
       <div id="adminDenied"></div>
     </div>
 
@@ -823,15 +828,20 @@
   function noRoles(){
     rolesList.innerHTML = `<div class="roles-empty"><div class="t">No open roles right now.</div><div class="s">We're always glad to meet good people &mdash; send us your resume below.</div></div>`;
   }
-  function bindApply(){
-    document.querySelectorAll('.apply-btn').forEach(b => b.addEventListener('click', () => {
-      const role = b.getAttribute('data-role');
-      let found=false;
-      [...positionSelect.options].forEach(o => { if(o.text===role){o.selected=true;found=true;} });
-      if(!found){ const o=document.createElement('option'); o.text=role; o.selected=true; positionSelect.add(o); }
-      document.getElementById('apply').scrollIntoView({ behavior:'smooth' });
-    }));
+  function showApply(role){
+    const apply = document.getElementById('apply');
+    apply.style.display = 'grid';
+    if (role){
+      let found = false;
+      [...positionSelect.options].forEach(o => { if (o.text === role){ o.selected = true; found = true; } });
+      if (!found){ const o = document.createElement('option'); o.text = role; o.selected = true; positionSelect.add(o); }
+    }
+    apply.scrollIntoView({ behavior:'smooth' });
   }
+  function bindApply(){
+    document.querySelectorAll('.apply-btn').forEach(b => b.addEventListener('click', () => showApply(b.getAttribute('data-role'))));
+  }
+  document.getElementById('generalApply').addEventListener('click', () => showApply('General application'));
   async function loadOpenings(){
     try{
       const res = await fetch(SCRIPT_URL, { method:'GET' });
@@ -911,7 +921,7 @@
     if (!(window.google && google.accounts && google.accounts.id)) return;
     const btn = document.getElementById('gsiBtn'); if (!btn) return;
     if (GOOGLE_CLIENT_ID.indexOf('PASTE') === 0){
-      document.getElementById('gsiHint').textContent = 'Staff sign-in not configured yet (add your Google client ID).';
+      var h = document.getElementById('gsiHint'); if (h) h.textContent = 'Staff sign-in not configured yet (add your Google client ID).';
       return;
     }
     gsiInited = true;
