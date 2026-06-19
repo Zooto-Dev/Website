@@ -100,7 +100,10 @@
   @media(max-width:920px){.navlinks,.navcta{display:none}.burger{display:flex}.mobile-menu.open{display:block}}
 
   /* hero */
-  .hero{padding:124px 0 60px}
+  .hero{padding:124px 0 60px;position:relative;overflow:hidden}
+  .hero::before{content:"";position:absolute;inset:0;background:url('frontend-bg.jpg') center 20%/cover no-repeat;opacity:.14;z-index:0;pointer-events:none}
+  .hero::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(244,241,234,.25) 0%,rgba(244,241,234,.5) 55%,var(--paper) 100%);z-index:0;pointer-events:none}
+  .hero-text,.hero-banner{position:relative;z-index:1}
   .hero-text{max-width:760px}
   .hero h1{font-size:clamp(40px,5.6vw,72px);line-height:1.05;margin-top:22px}
   .hero h1 em{font-style:italic;color:var(--green)}
@@ -307,6 +310,12 @@
   #toTop:hover{background:var(--green-deep)}
   .mobile-cta{display:none}
   @media(max-width:920px){
+    html,body{max-width:100%;overflow-x:hidden}
+    .wrap{padding:0 22px}
+    .hero{padding:98px 0 40px}
+    .hero-banner{padding:0 22px;margin-top:30px}
+    .sec{padding:64px 0}
+    img,iframe{max-width:100%}
     .about-grid{grid-template-columns:1fr;gap:40px}
     .creds .row,.grid-4,.grid-3,.adv-grid,.why-strip,.foot-grid{grid-template-columns:1fr 1fr}
     .adv.span2,.adv.span2 .sol ul{grid-column:auto;grid-template-columns:1fr}
@@ -316,10 +325,23 @@
     .mobile-cta a{flex:1;display:flex;align-items:center;justify-content:center;gap:8px;padding:13px;border-radius:12px;font-weight:600;font-size:14px;text-decoration:none}
     .mobile-cta .call{border:1px solid var(--line);color:var(--ink)}
     .mobile-cta .quote{background:var(--green);color:#fff}
+    .map{height:340px}
   }
   @media(max-width:560px){
+    .wrap{padding:0 18px}
+    .hero{padding:92px 0 32px}
+    .hero h1{font-size:clamp(34px,9vw,46px)}
+    .hero .lead{font-size:16px}
+    .hero-banner{padding:0 18px}
+    .hero-btns{gap:12px}
+    .hero-btns .btn,.hero-btns .btn-ghost{flex:1;justify-content:center;text-align:center}
+    .sec{padding:52px 0}
     .creds .row,.grid-4,.grid-3,.why-strip,.about-stats,.two,.vm{grid-template-columns:1fr}
+    .adv-grid{grid-template-columns:1fr}
+    .adv{padding:22px}
     .stat-card.full{grid-column:auto}
+    .form-wrap{padding:22px}
+    h2{font-size:clamp(26px,7vw,34px)!important}
   }
 </style>
 </head>
