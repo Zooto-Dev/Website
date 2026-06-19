@@ -54,6 +54,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Spectral:ital,wght@0,400;0,500;0,600;1,500&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/lucide@latest/dist/umd/lucide.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script src="https://accounts.google.com/gsi/client" async defer></script>
 
 <style>
@@ -380,6 +381,7 @@
   .v-up.has{border-style:solid;border-color:var(--green);background:rgba(51,86,74,.06)}
   .v-up input[type=file]{display:none}
   .v-fname{font-size:12px;color:var(--green);font-weight:600;margin-top:5px;word-break:break-all}
+  .v-note{font-size:11.5px;color:var(--soft);margin-top:6px;line-height:1.45;font-style:italic}
   .v-submit{display:flex;justify-content:space-between;align-items:center;gap:14px;flex-wrap:wrap;margin-top:4px}
   .v-consent{display:flex;gap:11px;align-items:flex-start;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px 16px;margin:4px 0 16px;font-size:13px;color:var(--soft);line-height:1.55;cursor:pointer}
   .v-consent input{margin-top:2px;width:17px;height:17px;accent-color:var(--green);flex-shrink:0;cursor:pointer}
@@ -689,95 +691,7 @@
     </div>
   </section>
 
-<!-- ===== VENDOR REGISTRATION ===== -->
-<section id="vendor" class="sec" style="background:var(--card);border-top:1px solid var(--line)">
-  <div class="wrap">
-    <div class="sec-head reveal"><div class="eyebrow">Vendor Onboarding</div><h2>Become a Vendor / Supplier.</h2></div>
-    <div class="v-modal">
-      <div class="v-body">
-      <p class="v-intro">Fill in your business &amp; bank details and upload the required documents. Fields marked <span style="color:#b4452f">*</span> are mandatory.</p>
 
-      <div class="v-panel">
-        <h4><span class="v-num">1</span> Business Details</h4>
-        <div class="v-grid">
-          <div class="v-field"><label>Vendor / Firm Name <span class="rq">*</span></label><input type="text" id="v_vendorName" placeholder="e.g. ABC Footwear Components"></div>
-          <div class="v-field"><label>Owner Name <span class="rq">*</span></label><input type="text" id="v_ownerName" placeholder="Proprietor / authorised person"></div>
-          <div class="v-field"><label>Business Type <span class="rq">*</span></label>
-            <select id="v_businessType"><option value="">Select Structure</option><option>Proprietorship</option><option>Partnership</option><option>Private Limited</option></select>
-          </div>
-          <div class="v-field"><label>GST Number <span class="rq">*</span></label><input type="text" id="v_gstNo" placeholder="22ABCDE1234F1Z5" style="text-transform:uppercase"></div>
-          <div class="v-field"><label>Mobile Number <span class="rq">*</span></label><input type="tel" id="v_mobileNo" placeholder="10-digit mobile"></div>
-          <div class="v-field"><label>Email ID <span class="rq">*</span></label><input type="email" id="v_emailId" placeholder="name@company.com"></div>
-          <div class="v-field full"><label>Business Address <span class="rq">*</span></label><textarea id="v_businessAddress" placeholder="Full registered address with city, state &amp; pincode"></textarea></div>
-        </div>
-      </div>
-
-      <div class="v-panel">
-        <h4><span class="v-num">2</span> Identity &amp; Tax</h4>
-        <div class="v-grid">
-          <div class="v-field"><label>PAN (Owner) <span class="rq">*</span></label><input type="text" id="v_panOwner" placeholder="ABCDE1234F" style="text-transform:uppercase"></div>
-          <div class="v-field"><label>Aadhar Number <span class="rq">*</span></label><input type="text" id="v_aadharNo" placeholder="12-digit Aadhar"></div>
-          <div class="v-field" id="v_companyPanBlock" style="display:none"><label>PAN of Company <span class="rq">*</span></label><input type="text" id="v_panCompany" placeholder="Company PAN" style="text-transform:uppercase"></div>
-          <div class="v-field full"><label>Registered under MSME (Udyam)? <span class="rq">*</span></label>
-            <div class="v-radio">
-              <label class="v-pill" id="v_msmeYesPill"><input type="radio" name="v_msmeFlag" value="yes"> Yes, registered</label>
-              <label class="v-pill on" id="v_msmeNoPill"><input type="radio" name="v_msmeFlag" value="no" checked> No</label>
-            </div>
-          </div>
-          <div class="v-field" id="v_msmeBlock" style="display:none"><label>MSME / Udyam Number <span class="rq">*</span></label><input type="text" id="v_msmeNumber" placeholder="UDYAM-XX-00-0000000"></div>
-          <div class="v-field" id="v_msmeTypeBlock" style="display:none"><label>MSME Type <span class="rq">*</span></label>
-            <select id="v_msmeType"><option value="">-- Select Category --</option><option>Micro</option><option>Small</option><option>Medium</option></select>
-          </div>
-        </div>
-      </div>
-
-      <div class="v-panel">
-        <h4><span class="v-num">3</span> Bank Details</h4>
-        <div class="v-grid">
-          <div class="v-field"><label>Bank Account Number <span class="rq">*</span></label><input type="text" id="v_bankAccNo" placeholder="Account number"></div>
-          <div class="v-field"><label>IFSC Code <span class="rq">*</span></label><input type="text" id="v_ifscCode" placeholder="e.g. HDFC0001234" style="text-transform:uppercase"></div>
-          <div class="v-field full"><label>Bank Name &amp; Branch <span class="rq">*</span></label><input type="text" id="v_bankName" placeholder="e.g. HDFC Bank, Manesar Branch"></div>
-        </div>
-      </div>
-
-      <div class="v-panel">
-        <h4><span class="v-num">4</span> Upload Documents</h4>
-        <p class="v-intro" style="margin-top:-6px">Clear photo or PDF, max 5 MB each.</p>
-        <div class="v-grid">
-          <div class="v-field"><label>PAN Card (Owner) <span class="rq">*</span></label>
-            <label class="v-up" id="v_ui-panOwner"><div class="uic">&#128196;</div><div class="utx"><b>Choose file</b><span>JPG, PNG or PDF</span></div><input type="file" accept="image/*,application/pdf" data-vkey="panOwner"></label>
-            <div class="v-fname" id="v_name-panOwner" style="display:none"></div></div>
-          <div class="v-field"><label>Aadhar Card <span class="rq">*</span></label>
-            <label class="v-up" id="v_ui-aadhar"><div class="uic">&#128196;</div><div class="utx"><b>Choose file</b><span>JPG, PNG or PDF</span></div><input type="file" accept="image/*,application/pdf" data-vkey="aadhar"></label>
-            <div class="v-fname" id="v_name-aadhar" style="display:none"></div></div>
-          <div class="v-field"><label>GST Certificate <span class="rq">*</span></label>
-            <label class="v-up" id="v_ui-gst"><div class="uic">&#128196;</div><div class="utx"><b>Choose file</b><span>JPG, PNG or PDF</span></div><input type="file" accept="image/*,application/pdf" data-vkey="gst"></label>
-            <div class="v-fname" id="v_name-gst" style="display:none"></div></div>
-          <div class="v-field"><label>Cancelled Cheque <span class="rq">*</span></label>
-            <label class="v-up" id="v_ui-cheque"><div class="uic">&#128196;</div><div class="utx"><b>Choose file</b><span>JPG, PNG or PDF</span></div><input type="file" accept="image/*,application/pdf" data-vkey="cheque"></label>
-            <div class="v-fname" id="v_name-cheque" style="display:none"></div></div>
-          <div class="v-field" id="v_companyPanFileBlock" style="display:none"><label>Company PAN Card <span class="rq">*</span></label>
-            <label class="v-up" id="v_ui-panCompany"><div class="uic">&#128196;</div><div class="utx"><b>Choose file</b><span>JPG, PNG or PDF</span></div><input type="file" accept="image/*,application/pdf" data-vkey="panCompany"></label>
-            <div class="v-fname" id="v_name-panCompany" style="display:none"></div></div>
-          <div class="v-field" id="v_msmeFileBlock" style="display:none"><label>MSME Certificate <span class="rq">*</span></label>
-            <label class="v-up" id="v_ui-msme"><div class="uic">&#128196;</div><div class="utx"><b>Choose file</b><span>JPG, PNG or PDF</span></div><input type="file" accept="image/*,application/pdf" data-vkey="msme"></label>
-            <div class="v-fname" id="v_name-msme" style="display:none"></div></div>
-        </div>
-      </div>
-
-      <label class="v-consent" id="v_consentWrap">
-        <input type="checkbox" id="v_consent">
-        <span>I hereby confirm that the information and documents submitted by me are true and accurate. I consent to Zooto Fashion collecting, verifying, storing, and processing this information for vendor registration, KYC verification, compliance, and payment-related purposes.</span>
-      </label>
-
-      <div class="v-submit">
-        <span class="v-status" id="v_status"></span>
-        <button type="button" class="btn" id="v_submitBtn">Submit Details <i data-lucide="send" style="width:16px;height:16px"></i></button>
-      </div>
-      </div>
-    </div>
-  </div>
-</section>
 
   <!-- CTA BAND -->
   <section class="dark cta-band">
@@ -928,11 +842,8 @@
   const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwFZiswFTTJLwlCuWl6IorzfOmFubcaYynWznPv20hXdx5ZCV93NLybkhWXghe2bzsB1w/exec';
   window.ZOOTO_SCRIPT_URL = SCRIPT_URL;
 
-  // "Vendor Registration" opens the in-page vendor form overlay
-  document.querySelectorAll('.vendor-link').forEach(function(a){
-    a.removeAttribute('target'); a.removeAttribute('rel'); a.href = '#vendor';
-    a.addEventListener('click', function(e){ e.preventDefault(); if (window.openVendor) window.openVendor(); });
-  });
+  // "Vendor Registration" -> dedicated shareable page
+  document.querySelectorAll('.vendor-link').forEach(function(a){ a.href = 'vendor.html'; a.removeAttribute('target'); a.removeAttribute('rel'); });
 
   // Staff admin (Google sign-in). Create an OAuth Web client ID and paste it here + in Code.gs.
   const GOOGLE_CLIENT_ID = '142808159664-qourpepcpnekth7ub9jegd32p3gdidi9.apps.googleusercontent.com';
@@ -1263,170 +1174,6 @@
     }, 800);
   });
 </script>
-<script>
-(function(){
-  var overlay = document.getElementById('vendor');
-  if (!overlay) return;
-  var statusEl = document.getElementById('v_status');
-  var btn = document.getElementById('v_submitBtn');
-  var bizType = document.getElementById('v_businessType');
-  var vfiles = { panOwner:{}, panCompany:{}, gst:{}, msme:{}, aadhar:{}, cheque:{} };
 
-  window.openVendor = function(){ overlay.style.display='block'; overlay.scrollIntoView({ behavior:'smooth' }); };
-
-  function vid(id){ return document.getElementById('v_'+id); }
-  function vval(id){ return (vid(id).value || '').trim(); }
-
-  // file reads
-  overlay.querySelectorAll('input[type=file]').forEach(function(input){
-    input.addEventListener('change', function(){
-      var key = input.getAttribute('data-vkey');
-      var file = input.files[0];
-      var nameEl = document.getElementById('v_name-'+key);
-      var ui = document.getElementById('v_ui-'+key);
-      if (!file){ vfiles[key]={}; nameEl.style.display='none'; ui.classList.remove('has'); return; }
-      if (file.size > 5*1024*1024){ setVStatus('File too large (max 5 MB): '+file.name, false); input.value=''; return; }
-      var r = new FileReader();
-      r.onload = function(e){ vfiles[key]={data:e.target.result, name:file.name}; nameEl.textContent='Selected: '+file.name; nameEl.style.display='block'; ui.classList.add('has'); ui.querySelector('.utx b').textContent='File selected'; };
-      r.readAsDataURL(file);
-    });
-  });
-
-  // conditionals
-  function toggleCompanyPan(){
-    var show = bizType.value && bizType.value !== 'Proprietorship';
-    document.getElementById('v_companyPanBlock').style.display = show?'flex':'none';
-    document.getElementById('v_companyPanFileBlock').style.display = show?'flex':'none';
-    if(!show){ vid('panCompany').value=''; clearVFile('panCompany'); }
-  }
-  bizType.addEventListener('change', toggleCompanyPan);
-
-  var msmeRadios = overlay.querySelectorAll('input[name="v_msmeFlag"]');
-  function toggleMsme(){
-    var sel = overlay.querySelector('input[name="v_msmeFlag"]:checked');
-    var yes = sel && sel.value==='yes';
-    document.getElementById('v_msmeBlock').style.display=yes?'flex':'none';
-    document.getElementById('v_msmeTypeBlock').style.display=yes?'flex':'none';
-    document.getElementById('v_msmeFileBlock').style.display=yes?'flex':'none';
-    document.getElementById('v_msmeYesPill').classList.toggle('on', yes);
-    document.getElementById('v_msmeNoPill').classList.toggle('on', !yes);
-    if(!yes){ vid('msmeNumber').value=''; vid('msmeType').value=''; clearVFile('msme'); }
-  }
-  msmeRadios.forEach(function(r){ r.addEventListener('change', toggleMsme); });
-
-  function clearVFile(key){
-    vfiles[key]={};
-    var input = overlay.querySelector('input[data-vkey="'+key+'"]'); if(input) input.value='';
-    var nameEl = document.getElementById('v_name-'+key); if(nameEl) nameEl.style.display='none';
-    var ui = document.getElementById('v_ui-'+key); if(ui){ ui.classList.remove('has'); ui.querySelector('.utx b').textContent='Choose file'; }
-  }
-
-  function setVStatus(msg, ok){ statusEl.textContent=msg||''; statusEl.className='v-status '+(ok?'ok':'err'); }
-
-  function validate(){
-    if(!vval('vendorName')) return 'Enter the Vendor / Firm name';
-    if(!vval('ownerName')) return 'Enter the Owner name';
-    if(!bizType.value) return 'Select a Business Type';
-    if(!vval('gstNo')) return 'Enter the GST number';
-    if(!vval('mobileNo') || !/^\d{10}$/.test(vval('mobileNo').replace(/\D/g,'').slice(-10))) return 'Enter a valid 10-digit mobile number';
-    if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(vval('emailId'))) return 'Enter a valid Email ID';
-    if(!vval('businessAddress')) return 'Enter the Business address';
-    if(!vval('panOwner')) return 'Enter the Owner PAN';
-    if(!vval('aadharNo')) return 'Enter the Aadhar number';
-    if(bizType.value!=='Proprietorship' && !vval('panCompany')) return 'Enter the Company PAN';
-    var msel = overlay.querySelector('input[name="v_msmeFlag"]:checked');
-    if(msel && msel.value==='yes'){ if(!vval('msmeNumber')) return 'Enter the MSME number'; if(!vval('msmeType')) return 'Select the MSME type'; }
-    if(!vval('bankAccNo')) return 'Enter the Bank account number';
-    if(!vval('ifscCode')) return 'Enter the IFSC code';
-    if(!vval('bankName')) return 'Enter the Bank name';
-    if(!vfiles.panOwner.data) return 'Upload the Owner PAN card';
-    if(!vfiles.aadhar.data) return 'Upload the Aadhar card';
-    if(!vfiles.gst.data) return 'Upload the GST certificate';
-    if(!vfiles.cheque.data) return 'Upload the cancelled cheque';
-    if(bizType.value!=='Proprietorship' && !vfiles.panCompany.data) return 'Upload the Company PAN card';
-    if(msel && msel.value==='yes' && !vfiles.msme.data) return 'Upload the MSME certificate';
-    return null;
-  }
-
-  btn.addEventListener('click', function(){
-    var err = validate();
-    if(err){ setVStatus(err, false); return; }
-    var consent = document.getElementById('v_consent');
-    var cw = document.getElementById('v_consentWrap');
-    if(!consent.checked){ cw.classList.add('err'); setVStatus('Please accept the consent declaration to continue.', false); cw.scrollIntoView({behavior:'smooth',block:'center'}); return; }
-    cw.classList.remove('err');
-
-    var gst = vval('gstNo').toUpperCase();
-    btn.disabled = true;
-    btn.innerHTML = '<span class="v-spin"></span> Checking...';
-    setVStatus('Checking GST number...', true);
-
-    fetch(window.ZOOTO_SCRIPT_URL + '?checkGst=' + encodeURIComponent(gst))
-      .then(function(r){ return r.json(); })
-      .then(function(res){
-        if(res && res.exists){
-          btn.disabled=false; btn.innerHTML='Submit Details <i data-lucide="send" style="width:16px;height:16px"></i>'; if(window.lucide) lucide.createIcons();
-          setVStatus('This GST number is already registered with us.', false);
-          return;
-        }
-        doVendorPost();
-      })
-      .catch(function(){ doVendorPost(); }); // if check fails, proceed (backend also blocks duplicates)
-  });
-
-  function doVendorPost(){
-    var bt = bizType.value;
-    var msel = overlay.querySelector('input[name="v_msmeFlag"]:checked');
-    var msmeFlag = msel ? msel.value : 'no';
-    var raw = vval('vendorName');
-    var safe = raw.replace(/[^a-zA-Z0-9]/g,'_');
-    function fn(t,o){ return o ? safe+'_'+t+'.'+o.split('.').pop() : ''; }
-
-    var payload = {
-      type:'vendor',
-      vendorName: raw, ownerName: vval('ownerName'), businessType: bt,
-      panOwner: vval('panOwner').toUpperCase(),
-      panCompany: (bt!=='Proprietorship') ? vval('panCompany').toUpperCase() : '',
-      gstNo: vval('gstNo').toUpperCase(), msmeFlag: msmeFlag,
-      msmeNumber: (msmeFlag==='yes') ? vval('msmeNumber') : '',
-      msmeType: (msmeFlag==='yes') ? vval('msmeType') : '',
-      aadharNo: vval('aadharNo'), mobileNo: vval('mobileNo'), emailId: vval('emailId'),
-      businessAddress: vval('businessAddress'), bankAccNo: vval('bankAccNo'),
-      bankName: vval('bankName'), ifscCode: vval('ifscCode').toUpperCase(),
-      imgPanOwner: vfiles.panOwner.data, imgAadhar: vfiles.aadhar.data, imgGst: vfiles.gst.data, imgCheque: vfiles.cheque.data,
-      imgPanCompany: (bt!=='Proprietorship') ? vfiles.panCompany.data : null,
-      imgMsme: (msmeFlag==='yes') ? vfiles.msme.data : null,
-      panOwnerFileName: fn('pan_card', vfiles.panOwner.name),
-      aadharFileName: fn('aadhar_card', vfiles.aadhar.name),
-      gstFileName: fn('gst_certificate', vfiles.gst.name),
-      chequeFileName: fn('cancel_cheque', vfiles.cheque.name),
-      panCompanyFileName: (bt!=='Proprietorship') ? fn('company_pan', vfiles.panCompany.name) : '',
-      msmeFileName: (msmeFlag==='yes') ? fn('msme_certificate', vfiles.msme.name) : ''
-    };
-
-    btn.disabled = true;
-    btn.innerHTML = '<span class="v-spin"></span> Submitting...';
-    setVStatus('Uploading documents, please wait...', true);
-
-    fetch(window.ZOOTO_SCRIPT_URL, {
-      method:'POST', mode:'no-cors',
-      headers:{'Content-Type':'text/plain;charset=utf-8'},
-      body: JSON.stringify(payload)
-    }).then(function(){
-      btn.disabled=false; btn.innerHTML='Submit Details <i data-lucide="send" style="width:16px;height:16px"></i>';
-      setVStatus('Submitted successfully! Our team will review your details.', true);
-      ['vendorName','ownerName','businessType','gstNo','mobileNo','emailId','businessAddress','panOwner','aadharNo','panCompany','msmeNumber','msmeType','bankAccNo','ifscCode','bankName'].forEach(function(i){ if(vid(i)) vid(i).value=''; });
-      Object.keys(vfiles).forEach(clearVFile);
-      var cb = document.getElementById('v_consent'); if(cb) cb.checked=false;
-      overlay.querySelector('input[name="v_msmeFlag"][value="no"]').checked=true;
-      toggleCompanyPan(); toggleMsme();
-      if(window.lucide) lucide.createIcons();
-    }).catch(function(){
-      btn.disabled=false; btn.innerHTML='Submit Details <i data-lucide="send" style="width:16px;height:16px"></i>';
-      setVStatus('Network error. Please try again.', false);
-    });
-  }
-})();
-</script>
 </body>
 </html>
