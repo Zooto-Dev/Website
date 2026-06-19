@@ -286,7 +286,7 @@
   .foot-bottom{border-top:1px solid var(--line-dk);padding-top:22px;text-align:center;font-size:12.5px;color:#8fa49a}
 
   /* staff / admin area (bottom, not in nav) */
-  #staff{background:var(--paper);border-top:1px solid var(--line);padding:44px 0 90px}
+  #staff{display:none;background:var(--paper);border-top:1px solid var(--line);padding:44px 0 90px}
   #staff .inner{max-width:780px;margin:0 auto}
   #staff .h{text-align:center;font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:var(--soft);margin-bottom:16px}
   #gsiArea{text-align:center}
@@ -403,7 +403,13 @@
       <span class="txt">Zooto <b>Fashion</b></span>
     </a>
     <nav class="navlinks">
-      <a href="#about">Company</a>
+      <div class="navdrop">
+        <a href="#about" class="navdrop-trigger">Company <i data-lucide="chevron-down" style="width:14px;height:14px"></i></a>
+        <div class="navdrop-menu"><div class="menu-card">
+          <a href="#about">About Company <small>Who we are</small></a>
+          <a class="staff-link" href="#staff">Employee <small>Staff sign-in</small></a>
+        </div></div>
+      </div>
       <a href="#strengths">Strengths</a>
       <a href="#advantage">Advantage</a>
       <a href="#testimonials">Reviews</a>
@@ -423,6 +429,7 @@
   </div>
   <div class="mobile-menu" id="mobileMenu">
     <a href="#about">Company</a>
+    <a class="staff-link" href="#staff">Employee</a>
     <a href="#strengths">Strengths</a>
     <a href="#advantage">Advantage</a>
     <a href="#testimonials">Reviews</a>
@@ -830,26 +837,6 @@
   </section>
 </main>
 
-<footer>
-  <div class="wrap">
-    <div class="foot-grid">
-      <div>
-        <div class="logo"><span class="txt">Zooto <b style="color:#9ed3b8">Fashion</b></span></div>
-        <p class="blurb">Footwear manufacturers since 2022. Producing 1 Lakh pairs/month to European quality standards for top global fashion and lifestyle brands.</p>
-      </div>
-      <div>
-        <h5>Company</h5>
-        <ul><li><a href="#about">About</a></li><li><a href="#strengths">Strengths</a></li><li><a href="#advantage">Advantage</a></li><li><a href="#testimonials">Reviews</a></li><li><a href="#careers">Careers</a></li></ul>
-      </div>
-      <div>
-        <h5>Contact</h5>
-        <ul><li><a href="mailto:ea@zootofashion.com">ea@zootofashion.com</a></li><li><a href="tel:+919870280137">+91 98702 80137</a></li><li style="color:#8fa49a">IMT Manesar, Gurugram, Haryana</li></ul>
-      </div>
-    </div>
-    <div class="foot-bottom">© <span id="year"></span> Zooto Fashion Pvt Ltd. All rights reserved.</div>
-  </div>
-</footer>
-
 <!-- STAFF / ADMIN (bottom, hidden until a @zootofashion.com user signs in) -->
 <section id="staff">
   <div class="wrap inner">
@@ -889,6 +876,28 @@
     </div>
   </div>
 </section>
+
+<footer>
+  <div class="wrap">
+    <div class="foot-grid">
+      <div>
+        <div class="logo"><span class="txt">Zooto <b style="color:#9ed3b8">Fashion</b></span></div>
+        <p class="blurb">Footwear manufacturers since 2022. Producing 1 Lakh pairs/month to European quality standards for top global fashion and lifestyle brands.</p>
+      </div>
+      <div>
+        <h5>Company</h5>
+        <ul><li><a href="#about">About</a></li><li><a href="#strengths">Strengths</a></li><li><a href="#advantage">Advantage</a></li><li><a href="#testimonials">Reviews</a></li><li><a href="#careers">Careers</a></li></ul>
+      </div>
+      <div>
+        <h5>Contact</h5>
+        <ul><li><a href="mailto:ea@zootofashion.com">ea@zootofashion.com</a></li><li><a href="tel:+919870280137">+91 98702 80137</a></li><li style="color:#8fa49a">IMT Manesar, Gurugram, Haryana</li></ul>
+      </div>
+    </div>
+    <div class="foot-bottom">© <span id="year"></span> Zooto Fashion Pvt Ltd. All rights reserved.</div>
+  </div>
+</footer>
+
+
 
 <button id="toTop" aria-label="Back to top"><i data-lucide="arrow-up" style="width:20px;height:20px"></i></button>
 
@@ -932,6 +941,14 @@
     a.removeAttribute('target'); a.removeAttribute('rel'); a.href = '#vendor';
     a.addEventListener('click', function(e){ e.preventDefault(); if(window.openVendor) window.openVendor(); });
   });
+
+  // "Employee" (Company dropdown) -> reveal Staff area + sign-in
+  window.openStaff = function(){ var s=document.getElementById('staff'); if(s){ s.style.display='block'; s.scrollIntoView({behavior:'smooth'}); } };
+  document.querySelectorAll('.staff-link').forEach(function(a){
+    a.addEventListener('click', function(e){ e.preventDefault(); window.openStaff(); });
+  });
+  if(location.hash==='#staff') window.openStaff();
+  window.addEventListener('hashchange', function(){ if(location.hash==='#staff') window.openStaff(); });
 
   // Staff admin (Google sign-in). Create an OAuth Web client ID and paste it here + in Code.gs.
   const GOOGLE_CLIENT_ID = '142808159664-qourpepcpnekth7ub9jegd32p3gdidi9.apps.googleusercontent.com';
