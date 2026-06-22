@@ -749,10 +749,6 @@
         <div class="v-field"><label>PAN Card (Owner) <span class="rq">*</span></label>
           <label class="v-up" id="v_ui-panOwner"><div class="uic">&#128196;</div><div class="utx"><b>Choose file</b><span>JPG, PNG or PDF</span></div><input type="file" accept="image/*,application/pdf" data-vkey="panOwner"></label>
           <div class="v-fname" id="v_name-panOwner" style="display:none"></div></div>
-        <div class="v-field"><label>Aadhar Card <span class="rq">*</span></label>
-          <label class="v-up" id="v_ui-aadhar"><div class="uic">&#128196;</div><div class="utx"><b>Choose file</b><span>JPG, PNG or PDF</span></div><input type="file" accept="image/*,application/pdf" data-vkey="aadhar"></label>
-          <div class="v-note">If you are concerned about the privacy of your Aadhaar card, you may upload a masked Aadhaar.</div>
-          <div class="v-fname" id="v_name-aadhar" style="display:none"></div></div>
         <div class="v-field"><label>GST Certificate <span class="rq">*</span></label>
           <label class="v-up" id="v_ui-gst"><div class="uic">&#128196;</div><div class="utx"><b>Choose file</b><span>JPG, PNG or PDF</span></div><input type="file" accept="image/*,application/pdf" data-vkey="gst"></label>
           <div class="v-fname" id="v_name-gst" style="display:none"></div></div>
@@ -1293,7 +1289,7 @@
   var statusEl=document.getElementById('v_status');
   var btn=document.getElementById('v_submitBtn');
   var bizType=document.getElementById('v_businessType');
-  var vfiles={ panOwner:{}, panCompany:{}, gst:{}, msme:{}, aadhar:{}, cheque:{} };
+  var vfiles={ panOwner:{}, panCompany:{}, gst:{}, msme:{}, cheque:{} };
   function vid(id){ return document.getElementById('v_'+id); }
   function vval(id){ return (vid(id).value||'').trim(); }
   function setVStatus(m,ok){ statusEl.textContent=m||''; statusEl.className='v-status '+(ok?'ok':'err'); }
@@ -1374,7 +1370,6 @@
     if(!vval('ifscCode')) return 'Enter the IFSC code';
     if(!vval('bankName')) return 'Enter the Bank name';
     if(!vfiles.panOwner.data) return 'Upload the Owner PAN card';
-    if(!vfiles.aadhar.data) return 'Upload the Aadhar card';
     if(!vfiles.gst.data) return 'Upload the GST certificate';
     if(!vfiles.cheque.data) return 'Upload the cancelled cheque';
     if(bizType.value!=='Proprietorship' && !vfiles.panCompany.data) return 'Upload the Company PAN card';
@@ -1396,7 +1391,7 @@
       section('Business Details'); row('Vendor / Firm',p.vendorName); row('Owner',p.ownerName); row('Business Type',p.businessType); row('GST Number',p.gstNo); row('Mobile',p.mobileNo); row('Email',p.emailId); row('Address',p.businessAddress);
       section('Identity & Tax'); row('PAN (Owner)',p.panOwner); if(p.businessType!=='Proprietorship') row('PAN (Company)',p.panCompany); row('MSME Registered',p.msmeFlag==='yes'?'Yes':'No'); if(p.msmeFlag==='yes'){ row('MSME Number',p.msmeNumber); row('MSME Type',p.msmeType); }
       section('Bank Details'); row('Account Number',p.bankAccNo); row('IFSC',p.ifscCode); row('Bank',p.bankName);
-      section('Documents Submitted'); var d=[]; if(p.imgPanOwner)d.push('PAN Card (Owner)'); if(p.businessType!=='Proprietorship'&&p.imgPanCompany)d.push('Company PAN'); if(p.imgGst)d.push('GST Certificate'); if(p.msmeFlag==='yes'&&p.imgMsme)d.push('MSME Certificate'); if(p.imgAadhar)d.push('Aadhaar Card'); if(p.imgCheque)d.push('Cancelled Cheque'); if(!d.length)d.push('None'); d.forEach(function(n){ row(n,'Uploaded'); });
+      section('Documents Submitted'); var d=[]; if(p.imgPanOwner)d.push('PAN Card (Owner)'); if(p.businessType!=='Proprietorship'&&p.imgPanCompany)d.push('Company PAN'); if(p.imgGst)d.push('GST Certificate'); if(p.msmeFlag==='yes'&&p.imgMsme)d.push('MSME Certificate'); if(p.imgCheque)d.push('Cancelled Cheque'); if(!d.length)d.push('None'); d.forEach(function(n){ row(n,'Uploaded'); });
       y+=10; if(y>770){ doc.addPage(); y=56; } doc.setFontSize(8); doc.setTextColor(120,120,110);
       doc.text(doc.splitTextToSize('Declaration accepted: the vendor confirmed the information and documents are true and accurate, and consented to Zooto Fashion collecting, verifying, storing and processing this information for vendor registration, KYC verification, compliance and payment-related purposes.',W-x-x),x,y);
       var fn='Zooto_Vendor_'+String(p.vendorName||'vendor').replace(/[^a-zA-Z0-9]/g,'_')+'.pdf';
@@ -1424,11 +1419,11 @@
     var payload={ type:'vendor', vendorName:raw, ownerName:vval('ownerName'), businessType:bt,
       panOwner:vval('panOwner').toUpperCase(), panCompany:(bt!=='Proprietorship')?vval('panCompany').toUpperCase():'',
       gstNo:vval('gstNo').toUpperCase(), msmeFlag:msmeFlag, msmeNumber:(msmeFlag==='yes')?vval('msmeNumber'):'', msmeType:(msmeFlag==='yes')?vval('msmeType'):'',
-      aadharNo:'', mobileNo:vval('mobileNo'), emailId:vval('emailId'), businessAddress:vval('businessAddress'),
+      mobileNo:vval('mobileNo'), emailId:vval('emailId'), businessAddress:vval('businessAddress'),
       bankAccNo:vval('bankAccNo'), bankName:vval('bankName'), ifscCode:vval('ifscCode').toUpperCase(),
-      imgPanOwner:vfiles.panOwner.data, imgAadhar:vfiles.aadhar.data, imgGst:vfiles.gst.data, imgCheque:vfiles.cheque.data,
+      imgPanOwner:vfiles.panOwner.data, imgGst:vfiles.gst.data, imgCheque:vfiles.cheque.data,
       imgPanCompany:(bt!=='Proprietorship')?vfiles.panCompany.data:null, imgMsme:(msmeFlag==='yes')?vfiles.msme.data:null,
-      panOwnerFileName:fn('pan_card',vfiles.panOwner.name), aadharFileName:fn('aadhar_card',vfiles.aadhar.name),
+      panOwnerFileName:fn('pan_card',vfiles.panOwner.name),
       gstFileName:fn('gst_certificate',vfiles.gst.name), chequeFileName:fn('cancel_cheque',vfiles.cheque.name),
       panCompanyFileName:(bt!=='Proprietorship')?fn('company_pan',vfiles.panCompany.name):'', msmeFileName:(msmeFlag==='yes')?fn('msme_certificate',vfiles.msme.name):'' };
     btn.disabled=true; btn.innerHTML='<span class="v-spin"></span> Submitting...'; setVStatus('Uploading documents, please wait...',true);
