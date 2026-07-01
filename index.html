@@ -1229,8 +1229,8 @@
             ${j.description?`<div class="desc">${esc(j.description)}</div>`:''}
           </div>
           <div class="adm-acts">
-            <button class="mini" data-act="status" data-row="${j.row}" data-status="${open?'Closed':'Open'}">${open?'Close':'Re-open'}</button>
-            <button class="mini del" data-act="delete" data-row="${j.row}">Delete</button>
+            <button class="mini" data-act="status" data-row="${j.row}" data-title="${esc(j.title)}" data-status="${open?'Closed':'Open'}">${open?'Close':'Re-open'}</button>
+            <button class="mini del" data-act="delete" data-row="${j.row}" data-title="${esc(j.title)}">Delete</button>
           </div>
         </div>`;
       }).join('');
@@ -1247,9 +1247,10 @@
     const b = e.currentTarget;
     const act = b.getAttribute('data-act');
     const row = parseInt(b.getAttribute('data-row'), 10);
+    const title = b.getAttribute('data-title') || '';
     if (act === 'delete' && !confirm('Delete this job?')) return;
     b.disabled = true;
-    await adminPost(act === 'status' ? { action:'status', row, status: b.getAttribute('data-status') } : { action:'delete', row });
+    await adminPost(act === 'status' ? { action:'status', row, title, status: b.getAttribute('data-status') } : { action:'delete', row, title });
     setTimeout(loadAdminJobs, 700);
   }
 
