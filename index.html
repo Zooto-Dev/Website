@@ -56,7 +56,6 @@
 <script src="https://cdn.jsdelivr.net/npm/lucide@latest/dist/umd/lucide.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script src="https://accounts.google.com/gsi/client" async defer></script>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <style>
   :root{
@@ -419,7 +418,7 @@
       <div class="navdrop">
         <a href="#careers" class="navdrop-trigger">Careers <i data-lucide="chevron-down" style="width:14px;height:14px"></i></a>
         <div class="navdrop-menu"><div class="menu-card">
-          <a href="#careers">Job Openings <small>Current vacancies &amp; apply</small></a>
+          <a href="Apply.html">Job Openings <small>Current vacancies &amp; apply</small></a>
           <a class="vendor-link" target="_blank" rel="noopener">Vendor Registration <small>Supplier KYC onboarding</small></a>
         </div></div>
       </div>
@@ -650,50 +649,9 @@
       </div>
 
       <div class="roles">
-        <div class="roles-h reveal">
-          <h3>Open roles</h3>
-          <p>All roles are based at our IMT Manesar facility. Don't see the right fit? Apply generally below.</p>
-        </div>
-        <div id="rolesList">
-          <div class="roles-loading">Loading open roles…</div>
-        </div>
-
-        <div style="text-align:center;margin-top:24px">
-          <button type="button" id="generalApply" class="btn-ghost">Don't see a fit? Apply with your resume</button>
-        </div>
-
-        <!-- APPLICATION FORM (hidden until "Apply" is clicked) -->
-        <div id="apply" class="form-wrap" style="margin-top:32px;display:none">
-          <div class="intro">
-            <div class="eyebrow">Apply now</div>
-            <h3>Tell us about you.</h3>
-            <p>Share your resume (PDF/DOC) or a link, and we'll get back to you.</p>
-            <div class="points">
-              <div><i data-lucide="check-circle-2" style="width:18px;height:18px"></i> We read every application</div>
-              <div><i data-lucide="check-circle-2" style="width:18px;height:18px"></i> Reply within a few working days</div>
-              <div><i data-lucide="check-circle-2" style="width:18px;height:18px"></i> On-site role at IMT Manesar, Gurugram</div>
-            </div>
-            <div class="alt">Prefer email? Write to <a href="mailto:ea@zootofashion.com">ea@zootofashion.com</a></div>
-          </div>
-          <div class="formcard">
-            <form id="careerForm">
-              <input type="text" name="website" class="hp" tabindex="-1" autocomplete="off" aria-hidden="true">
-              <div class="field"><label>Full name *</label><input type="text" name="name" required placeholder="Your full name"></div>
-              <div class="two">
-                <div class="field"><label>Email *</label><input type="email" name="email" required placeholder="you@email.com"></div>
-                <div class="field"><label>Phone *</label><input type="tel" name="phone" required placeholder="+91 ..."></div>
-              </div>
-              <div class="two">
-                <div class="field"><label>Role *</label><select name="position" id="positionSelect" required><option value="" disabled selected>Select a role</option><option>General application</option></select></div>
-                <div class="field"><label>Experience</label><input type="text" name="experience" placeholder="e.g. 3 years"></div>
-              </div>
-              <div class="field"><label>Resume (PDF / DOC) *</label><input type="file" name="resume_file" accept=".pdf,.doc,.docx" class="file"></div>
-              <div class="field"><label>Or paste a link (optional)</label><input type="url" name="resume" placeholder="https:// (Drive or LinkedIn)"></div>
-              <div class="field"><label>Anything else?</label><textarea name="message" rows="3" placeholder="A line about why you'd be a good fit..."></textarea></div>
-              <button type="submit" class="btn submit" id="careerSubmitBtn"><span id="careerBtnText">Submit application</span> <i data-lucide="send" style="width:16px;height:16px"></i></button>
-              <p class="status" id="careerStatus"></p>
-            </form>
-          </div>
+        <div style="text-align:center;max-width:560px;margin:8px auto 0">
+          <p style="color:var(--soft);font-size:15.5px;line-height:1.62;margin-bottom:26px">See our current openings and apply in a minute — quick form, resume upload, no account needed. Our HR team reviews every application.</p>
+          <a href="Apply.html" class="btn" style="font-size:15px;padding:15px 34px"><i data-lucide="briefcase" style="width:18px;height:18px"></i> View openings &amp; apply</a>
         </div>
       </div>
     </div>
@@ -988,181 +946,8 @@
     } finally { inquiryBtnText.textContent = 'Send Inquiry'; }
   });
 
-  // ---- Careers: load openings from the "OPENING" sheet ----
-  const rolesList = document.getElementById('rolesList');
-  const positionSelect = document.getElementById('positionSelect');
-
+  // Careers openings + application now live on Apply.html.
   function esc(s){ return String(s==null?'':s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
-
-  function roleHTML(r){
-    const title=esc(r.title||r.position||r.role||'');
-    const dept=esc(r.department||r.dept||'');
-    const desc=esc(r.description||r.desc||'');
-    const loc=esc(r.location||'IMT Manesar');
-    const type=esc(r.type||'Full-time');
-    const exp=esc(r.experience||r.exp||'');
-    return `<div class="role">
-      <div class="body">
-        <div class="titlerow"><h4>${title}</h4>${dept?`<span class="dept">${dept}</span>`:''}</div>
-        ${desc?`<p class="desc">${desc}</p>`:''}
-        <div class="meta">
-          ${loc?`<span><i data-lucide="map-pin" style="width:14px;height:14px"></i> ${loc}</span>`:''}
-          ${type?`<span><i data-lucide="clock" style="width:14px;height:14px"></i> ${type}</span>`:''}
-          ${exp?`<span><i data-lucide="briefcase" style="width:14px;height:14px"></i> ${exp}</span>`:''}
-        </div>
-      </div>
-      <button class="apply-btn" data-role="${title}">Apply <i data-lucide="arrow-right" style="width:15px;height:15px"></i></button>
-    </div>`;
-  }
-  function noRoles(){
-    rolesList.innerHTML = `<div class="roles-empty"><div class="t">No open roles right now.</div><div class="s">We're always glad to meet good people &mdash; send us your resume below.</div></div>`;
-  }
-  function showApply(role){
-    const apply = document.getElementById('apply');
-    apply.style.display = 'grid';
-    if (role){
-      let found = false;
-      [...positionSelect.options].forEach(o => { if (o.text === role){ o.selected = true; found = true; } });
-      if (!found){ const o = document.createElement('option'); o.text = role; o.selected = true; positionSelect.add(o); }
-    }
-    apply.scrollIntoView({ behavior:'smooth' });
-  }
-  function bindApply(){
-    document.querySelectorAll('.apply-btn').forEach(b => b.addEventListener('click', () => showApply(b.getAttribute('data-role'))));
-  }
-  document.getElementById('generalApply').addEventListener('click', () => showApply('General application'));
-
-  // ---- Google for Jobs: inject JobPosting structured data for each open role ----
-  function isoPlusDays(days){
-    const d = new Date(); d.setDate(d.getDate() + days);
-    return d.toISOString().slice(0, 10);
-  }
-  function empType(t){
-    const s = String(t || '').toLowerCase();
-    if (s.indexOf('part') === 0 || s.indexOf('part-time') >= 0) return 'PART_TIME';
-    if (s.indexOf('contract') >= 0) return 'CONTRACTOR';
-    if (s.indexOf('intern') >= 0) return 'INTERN';
-    if (s.indexOf('temp') >= 0) return 'TEMPORARY';
-    return 'FULL_TIME';
-  }
-  function injectJobLd(roles){
-    document.querySelectorAll('script.jobposting-ld').forEach(n => n.remove());
-    const SITE = 'https://zootofashion.com';
-    roles.forEach(r => {
-      const title = r.title || r.position || r.role; if (!title) return;
-      const loc = r.location || 'IMT Manesar';
-      const type = r.type || 'Full-time';
-      const exp = r.experience || r.exp || '';
-      const dept = r.department || r.dept || '';
-      let desc = r.description || r.desc || '';
-      desc = (desc ? desc + ' ' : '') + title + ' at Zooto Fashion Pvt Ltd, ' + loc + '.'
-           + (dept ? ' Department: ' + dept + '.' : '')
-           + ' Employment type: ' + type + '.'
-           + (exp ? ' Experience: ' + exp + '.' : '');
-      const data = {
-        "@context": "https://schema.org/",
-        "@type": "JobPosting",
-        "title": String(title),
-        "description": String(desc),
-        "datePosted": (r.posted && /^\d{4}-\d{2}-\d{2}/.test(r.posted)) ? r.posted : isoPlusDays(0),
-        "validThrough": isoPlusDays(30),
-        "employmentType": empType(type),
-        "hiringOrganization": {
-          "@type": "Organization",
-          "name": "Zooto Fashion Pvt Ltd",
-          "sameAs": SITE,
-          "logo": SITE + "/logo.png"
-        },
-        "jobLocation": {
-          "@type": "Place",
-          "address": {
-            "@type": "PostalAddress",
-            "streetAddress": "Plot 300, Sector 6, IMT Manesar",
-            "addressLocality": "Gurugram",
-            "addressRegion": "HR",
-            "postalCode": "122052",
-            "addressCountry": "IN"
-          }
-        },
-        "identifier": {
-          "@type": "PropertyValue",
-          "name": "Zooto Fashion Pvt Ltd",
-          "value": String(title)
-        }
-      };
-      const s = document.createElement('script');
-      s.type = 'application/ld+json';
-      s.className = 'jobposting-ld';
-      s.text = JSON.stringify(data);
-      document.head.appendChild(s);
-    });
-  }
-
-  async function loadOpenings(){
-    try{
-      const res = await fetch(SCRIPT_URL, { method:'GET' });
-      const roles = await res.json();
-      if(!Array.isArray(roles) || roles.length===0){ noRoles(); return; }
-      rolesList.innerHTML = roles.map(roleHTML).join('');
-      injectJobLd(roles);
-      // dropdown: keep placeholder + General application, insert roles before it
-      const general = [...positionSelect.options].find(o => o.text==='General application');
-      roles.forEach(r => {
-        const t = r.title||r.position||r.role; if(!t) return;
-        const o = document.createElement('option'); o.text=t;
-        positionSelect.insertBefore(o, general);
-      });
-      if(window.lucide) lucide.createIcons();
-      bindApply();
-    }catch(err){ console.error('openings load failed', err); noRoles(); }
-  }
-  loadOpenings();
-
-  // ---- Career application form ----
-  const careerForm = document.getElementById('careerForm');
-  const careerStatus = document.getElementById('careerStatus');
-  const careerBtnText = document.getElementById('careerBtnText');
-  // file -> base64 (without data: prefix)
-  function toBase64(file){
-    return new Promise((resolve, reject) => {
-      const r = new FileReader();
-      r.onload = () => resolve(String(r.result).split(',')[1] || '');
-      r.onerror = reject;
-      r.readAsDataURL(file);
-    });
-  }
-
-  careerForm.addEventListener('submit', async (e) => {
-    e.preventDefault();
-    if (careerForm.website.value) { setStatus(careerStatus, 'Thanks! Your application has been received.', true); careerForm.reset(); return; }
-
-    const file = careerForm.resume_file.files[0];
-    const link = careerForm.resume.value.trim();
-    if (!file && !link) { setStatus(careerStatus, 'Please attach your resume (PDF/DOC) or paste a link.', false); return; }
-    if (file && file.size > 5 * 1024 * 1024) { setStatus(careerStatus, 'Resume is too large - please keep it under 5 MB.', false); return; }
-
-    careerBtnText.textContent = 'Submitting...';
-    try {
-      let fileData = '', fileName = '', fileMime = '';
-      if (file) { fileData = await toBase64(file); fileName = file.name; fileMime = file.type; }
-      await postForm({
-        type: 'career',
-        name: careerForm.name.value.trim(),
-        email: careerForm.email.value.trim(),
-        phone: careerForm.phone.value.trim(),
-        position: careerForm.position.value,
-        experience: careerForm.experience.value.trim(),
-        resume: link,
-        fileData: fileData, fileName: fileName, fileMime: fileMime,
-        message: careerForm.message.value.trim(),
-        timestamp: new Date().toLocaleString()
-      });
-      setStatus(careerStatus, 'Thanks! Your application has been received.', true);
-      careerForm.reset();
-    } catch (err) {
-      setStatus(careerStatus, 'Something went wrong. Please try again or email ea@zootofashion.com', false);
-    } finally { careerBtnText.textContent = 'Submit application'; }
-  });
 
   // ===================== STAFF ADMIN (Google sign-in) =====================
   let adminToken = '';
@@ -1441,150 +1226,6 @@
       })
       .catch(function(){ btn.disabled=false; btn.innerHTML='Submit Details &rarr;'; setVStatus('Network error. Please try again.',false); });
   }
-})();
-</script>
-<script>
-/* ===== CAREERS — live openings + application (Supabase via GAS config) ===== */
-(function(){
-  const NX_CONFIG_URL = 'https://script.google.com/macros/s/AKfycbyLyxuzYzGZ1odibF_-ORvn314hFY_zKg4595HpDZrhMObhqbcAh_LIw60sTc4b_dPI/exec';
-  let sb = null, JOBS = [], SELECTED_JOB_ID = null;
-  const esc = s => String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-
-  function loadConfig(){
-    return new Promise((resolve,reject)=>{
-      const cb='cfg'+Math.floor(Math.random()*1e6);
-      const t=setTimeout(()=>{delete window[cb];reject(new Error('timeout'));},15000);
-      window[cb]=d=>{clearTimeout(t);delete window[cb];resolve(d);};
-      const s=document.createElement('script');
-      s.src=NX_CONFIG_URL+'?callback='+cb+'&t='+Date.now();
-      s.onerror=()=>{clearTimeout(t);reject(new Error('unreachable'));};
-      document.body.appendChild(s);
-    });
-  }
-
-  async function initCareers(){
-    const list = document.getElementById('rolesList');
-    if(!list) return;
-    try{
-      const cfg = await loadConfig();
-      if(!cfg || !cfg.url) throw new Error('config');
-      sb = supabase.createClient(cfg.url, cfg.key);
-      const { data, error } = await sb.rpc('nx_open_jobs');
-      if(error) throw error;
-      JOBS = (data||[]).filter(j => (j.status||'OPEN')==='OPEN');
-      renderRoles(); populateSelect();
-      const jp = new URLSearchParams(location.search).get('job');
-      if(jp){ const j = JOBS.find(x=>String(x.id)===String(jp)); if(j) openApply(j.id, j.title); }
-    }catch(e){
-      list.innerHTML = '<div class="roles-empty"><div class="t">Couldn\'t load openings right now</div><div class="s">Please try again shortly, or write to <a href="mailto:ea@zootofashion.com" style="color:var(--green)">ea@zootofashion.com</a>.</div></div>';
-    }
-    wireButtons();
-  }
-
-  function renderRoles(){
-    const list = document.getElementById('rolesList');
-    if(!JOBS.length){
-      list.innerHTML = '<div class="roles-empty"><div class="t">No open roles right now</div><div class="s">We\'re always keen to meet good people — apply generally below.</div></div>';
-      return;
-    }
-    list.innerHTML = JOBS.map(j=>{
-      const meta=[];
-      if(j.type) meta.push('<span><i data-lucide="briefcase" style="width:15px;height:15px"></i>'+esc(j.type)+'</span>');
-      if(j.location) meta.push('<span><i data-lucide="map-pin" style="width:15px;height:15px"></i>'+esc(j.location)+'</span>');
-      if(j.experience) meta.push('<span><i data-lucide="clock" style="width:15px;height:15px"></i>'+esc(j.experience)+'</span>');
-      if(Number(j.openings)>0) meta.push('<span><i data-lucide="users" style="width:15px;height:15px"></i>'+j.openings+' opening'+(Number(j.openings)>1?'s':'')+'</span>');
-      return '<div class="role"><div class="body"><div class="titlerow"><h4>'+esc(j.title)+'</h4>'
-        +(j.department?'<span class="dept">'+esc(j.department)+'</span>':'')+'</div>'
-        +(j.description?'<div class="desc">'+esc(String(j.description).slice(0,260))+(String(j.description).length>260?'…':'')+'</div>':'')
-        +(meta.length?'<div class="meta">'+meta.join('')+'</div>':'')+'</div>'
-        +'<button type="button" class="apply-btn" data-job="'+j.id+'" data-title="'+esc(j.title)+'">Apply <i data-lucide="arrow-right" style="width:16px;height:16px"></i></button></div>';
-    }).join('');
-    if(window.lucide) lucide.createIcons();
-  }
-
-  function populateSelect(){
-    const sel = document.getElementById('positionSelect');
-    if(!sel) return;
-    sel.innerHTML = ['<option value="" disabled selected>Select a role</option>']
-      .concat(JOBS.map(j=>'<option value="'+esc(j.title)+'" data-job="'+j.id+'">'+esc(j.title)+'</option>'))
-      .concat(['<option value="General application">General application</option>']).join('');
-  }
-
-  function openApply(jobId, title){
-    SELECTED_JOB_ID = jobId || null;
-    const sel = document.getElementById('positionSelect');
-    if(sel && title){ sel.value = title; }
-    const apply = document.getElementById('apply');
-    apply.style.display = 'grid';
-    apply.scrollIntoView({behavior:'smooth', block:'start'});
-  }
-
-  function wireButtons(){
-    const list = document.getElementById('rolesList');
-    list.addEventListener('click', e=>{
-      const b = e.target.closest('.apply-btn'); if(!b) return;
-      openApply(b.dataset.job, b.dataset.title);
-    });
-    const gen = document.getElementById('generalApply');
-    if(gen) gen.addEventListener('click', ()=>openApply(null, 'General application'));
-    const sel = document.getElementById('positionSelect');
-    if(sel) sel.addEventListener('change', ()=>{
-      const opt = sel.options[sel.selectedIndex];
-      SELECTED_JOB_ID = opt && opt.dataset.job ? opt.dataset.job : null;
-    });
-    const form = document.getElementById('careerForm');
-    if(form) form.addEventListener('submit', submitCareer);
-  }
-
-  async function submitCareer(e){
-    e.preventDefault();
-    const form = e.target;
-    const status = document.getElementById('careerStatus');
-    const btn = document.getElementById('careerSubmitBtn');
-    const txt = document.getElementById('careerBtnText');
-    if(form.website && form.website.value){ return; }   // honeypot
-    const name = form.name.value.trim();
-    const email = form.email.value.trim();
-    const phone = (form.phone.value||'').replace(/\D/g,'');
-    const position = form.position.value;
-    const experience = form.experience.value.trim();
-    const link = (form.resume.value||'').trim();
-    const file = form.resume_file.files && form.resume_file.files[0];
-    if(!name || !email || !phone || !position){ status.style.color='#c0392b'; status.textContent='Please fill all required fields.'; return; }
-    if(phone.length<10){ status.style.color='#c0392b'; status.textContent='Enter a valid 10-digit phone.'; return; }
-    if(!file && !link){ status.style.color='#c0392b'; status.textContent='Attach a resume file or paste a link.'; return; }
-    btn.disabled=true; txt.textContent='Submitting…'; status.textContent='';
-    try{
-      if(!sb){ const cfg=await loadConfig(); sb=supabase.createClient(cfg.url,cfg.key); }
-      let resumeUrl = link || null;
-      if(file){
-        if(file.size>8*1024*1024) throw new Error('Resume must be under 8 MB.');
-        const path='careers/'+Date.now()+'_'+name.replace(/[^A-Za-z0-9]/g,'_').slice(0,24)+'_'+file.name.replace(/[^A-Za-z0-9._-]/g,'_');
-        const { error:upErr } = await sb.storage.from('hr-docs').upload(path, file);
-        if(upErr) throw new Error('Upload failed: '+upErr.message);
-        resumeUrl = path;
-      }
-      const { data, error } = await sb.rpc('nx_apply_job', {
-        p_name:name, p_phone:phone, p_email:email,
-        p_position: (position==='General application'?null:position),
-        p_department:null, p_experience:experience||null, p_expected_salary:null,
-        p_resume_url:resumeUrl, p_job_id: SELECTED_JOB_ID?Number(SELECTED_JOB_ID):null
-      });
-      if(error) throw error;
-      if(data && data.error) throw new Error(data.error);
-      form.reset();
-      status.style.color='#2e7d55';
-      status.textContent='Application received! Thank you — we\'ll be in touch soon. 🌿';
-      txt.textContent='Submitted ✓';
-      setTimeout(()=>{ btn.disabled=false; txt.textContent='Submit application'; }, 4000);
-    }catch(err){
-      btn.disabled=false; txt.textContent='Submit application';
-      status.style.color='#c0392b'; status.textContent = err.message || 'Something went wrong. Please try again.';
-    }
-  }
-
-  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded', initCareers);
-  else initCareers();
 })();
 </script>
 </body>
