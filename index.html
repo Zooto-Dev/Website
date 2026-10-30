@@ -909,13 +909,16 @@
   const GOOGLE_CLIENT_ID = '142808159664-qourpepcpnekth7ub9jegd32p3gdidi9.apps.googleusercontent.com';
   const ADMIN_DOMAIN = 'zootofashion.com';
 
-  function postForm(payload) {
-    return fetch(SCRIPT_URL, {
-      method: 'POST', mode: 'no-cors',
-      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-      body: JSON.stringify(payload)
-    });
+  // Forms go to Nexus 2.0 (the company ERP); the answer carries a reference number.
+  const NEXUS_WEB = 'https://nvpdncpvqwcalibpttdx.supabase.co/functions/v1/nx-web';
+  window.ZOOTO_NEXUS_WEB = NEXUS_WEB;
+  async function nexusPost(payload) {
+    const r = await fetch(NEXUS_WEB, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
+    let j = {}; try { j = await r.json(); } catch (e) {}
+    if (!r.ok || j.error) throw new Error(j.error || ('Request failed (' + r.status + ')'));
+    return j;
   }
+  window.ZOOTO_NEXUS_POST = nexusPost;
   function setStatus(el, msg, ok) {
     el.textContent = msg; el.style.display = 'block';
     el.style.color = ok ? '#2f7d5b' : '#c0392b';
@@ -928,22 +931,25 @@
   inquiryForm.addEventListener('submit', async (e) => {
     e.preventDefault();
     if (inquiryForm.website.value) { setStatus(inquiryStatus, 'Thank you! Your inquiry has been received.', true); inquiryForm.reset(); return; }
+    const phoneDigits = inquiryForm.phone.value.replace(/\D/g, '');
+    if (phoneDigits && !/^[6-9]\d{9}$/.test(phoneDigits.slice(-10))) { setStatus(inquiryStatus, 'Please enter a valid 10-digit mobile number (or leave it blank).', false); return; }
+    const btn = document.getElementById('inquirySubmitBtn'); if (btn.disabled) return; btn.disabled = true;
     inquiryBtnText.textContent = 'Sending...';
     try {
-      await postForm({
-        type: 'inquiry',
+      const res = await nexusPost({
+        action: 'inquiry',
         name: inquiryForm.name.value.trim(),
         email: inquiryForm.email.value.trim(),
         phone: inquiryForm.phone.value.trim(),
         company: inquiryForm.company.value.trim(),
         message: inquiryForm.message.value.trim(),
-        timestamp: new Date().toLocaleString()
+        page: location.pathname + location.hash
       });
-      setStatus(inquiryStatus, 'Thank you! Your inquiry has been received.', true);
+      setStatus(inquiryStatus, 'Thank you! Your inquiry has been received' + (res.no ? ' (ref. ' + res.no + ')' : '') + '. We will get back to you within 1 business day.', true);
       inquiryForm.reset();
     } catch (err) {
-      setStatus(inquiryStatus, 'Something went wrong. Please try again or email us.', false);
-    } finally { inquiryBtnText.textContent = 'Send Inquiry'; }
+      setStatus(inquiryStatus, (err && err.message ? err.message : 'Something went wrong.') + ' You can also email ea@zootofashion.com.', false);
+    } finally { inquiryBtnText.textContent = 'Send Inquiry'; btn.disabled = false; }
   });
 
   // Careers openings + application now live on Apply.html.
@@ -1172,7 +1178,7 @@
       doc.setFillColor(38,67,58); doc.rect(0,0,W,92,'F');
       doc.setTextColor(255,255,255); doc.setFont('helvetica','bold'); doc.setFontSize(20); doc.text('Zooto Fashion Pvt Ltd',x,44);
       doc.setFont('helvetica','normal'); doc.setFontSize(11); doc.text('Vendor Registration - Acknowledgement',x,66);
-      y=124; doc.setFontSize(9); doc.setTextColor(120,120,110); doc.text('Submitted on: '+new Date().toLocaleString(),x,y); y+=22;
+      y=124; doc.setFontSize(9); doc.setTextColor(120,120,110); doc.text('Submitted on: '+new Date().toLocaleString()+(p.refNo?'   |   Reference: '+p.refNo:''),x,y); y+=22;
       function section(t){ y+=4; doc.setFont('helvetica','bold'); doc.setFontSize(12); doc.setTextColor(38,67,58); doc.text(t,x,y); y+=7; doc.setDrawColor(220,215,200); doc.line(x,y,W-x,y); y+=16; }
       function row(l,v){ if(v===undefined||v===null||v==='') v='-'; if(y>780){ doc.addPage(); y=56; } doc.setFont('helvetica','bold'); doc.setFontSize(10); doc.setTextColor(34,36,24); doc.text(String(l),x,y); doc.setFont('helvetica','normal'); doc.setTextColor(70,72,60); var ln=doc.splitTextToSize(String(v),W-(x+lblW)-x); doc.text(ln,x+lblW,y); y+=Math.max(18,ln.length*13); }
       section('Business Details'); row('Vendor / Firm',p.vendorName); row('Owner',p.ownerName); row('Business Type',p.businessType); row('GST Number',p.gstNo); row('Mobile',p.mobileNo); row('Email',p.emailId); row('Address',p.businessAddress);
@@ -1193,7 +1199,8 @@
     cw.classList.remove('err');
     var gst=vval('gstNo').toUpperCase();
     btn.disabled=true; btn.innerHTML='<span class="v-spin"></span> Checking...'; setVStatus('Checking GST number...',true);
-    fetch(SCRIPT_URL+'?checkGst='+encodeURIComponent(gst)).then(function(r){ return r.json(); }).then(function(res){
+    window.ZOOTO_NEXUS_POST({ action:'gst', gst:gst }).then(function(res){
+      if(res&&res.valid===false){ btn.disabled=false; btn.innerHTML='Submit Details &rarr;'; setVStatus('The GST number is not in a valid format (15 characters, e.g. 06ABCDE1234F1Z5).',false); return; }
       if(res&&res.exists){ btn.disabled=false; btn.innerHTML='Submit Details &rarr;'; setVStatus('This GST number is already registered with us.',false); return; }
       doVendorPost();
     }).catch(function(){ doVendorPost(); });
@@ -1213,18 +1220,20 @@
       panOwnerFileName:fn('pan_card',vfiles.panOwner.name),
       gstFileName:fn('gst_certificate',vfiles.gst.name), chequeFileName:fn('cancel_cheque',vfiles.cheque.name),
       panCompanyFileName:(bt!=='Proprietorship')?fn('company_pan',vfiles.panCompany.name):'', msmeFileName:(msmeFlag==='yes')?fn('msme_certificate',vfiles.msme.name):'' };
+    payload.action='vendor';
     btn.disabled=true; btn.innerHTML='<span class="v-spin"></span> Submitting...'; setVStatus('Uploading documents, please wait...',true);
-    fetch(SCRIPT_URL,{ method:'POST', mode:'no-cors', headers:{'Content-Type':'text/plain;charset=utf-8'}, body:JSON.stringify(payload) })
-      .then(function(){
+    window.ZOOTO_NEXUS_POST(payload)
+      .then(function(res){
+        payload.refNo = res && res.no || '';
         generateVendorPdf(payload);
         btn.disabled=false; btn.innerHTML='Submit Details &rarr;';
-        setVStatus('Submitted successfully! A PDF receipt has been downloaded. Our team will review your details.',true);
+        setVStatus('Submitted successfully'+(payload.refNo?' (ref. '+payload.refNo+')':'')+'! A PDF receipt has been downloaded. Our purchase team will review your details.',true);
         ['vendorName','ownerName','businessType','gstNo','mobileNo','emailId','businessAddress','panOwner','panCompany','msmeNumber','msmeType','bankAccNo','ifscCode','bankName'].forEach(function(i){ if(vid(i)) vid(i).value=''; });
         Object.keys(vfiles).forEach(clearVFile);
         var cb=document.getElementById('v_consent'); if(cb) cb.checked=false;
         document.querySelector('input[name="v_msmeFlag"][value="no"]').checked=true; toggleCompanyPan(); toggleMsme();
       })
-      .catch(function(){ btn.disabled=false; btn.innerHTML='Submit Details &rarr;'; setVStatus('Network error. Please try again.',false); });
+      .catch(function(err){ btn.disabled=false; btn.innerHTML='Submit Details &rarr;'; setVStatus((err&&err.message)||'Network error. Please try again.',false); });
   }
 })();
 </script>
